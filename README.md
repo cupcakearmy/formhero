@@ -11,7 +11,7 @@ Fully customisable react form utility.
 
 ## 🚀 Quickstart
 
-```tyimport React from 'react'
+```typescript
 import ReactDOM from 'react-dom'
 import { useForm } from 'formhero'
 
