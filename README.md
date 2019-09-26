@@ -64,7 +64,7 @@ const Form = () => {
         <br />
 
         <div>Is it awesome?</div>
-        <input type="checkbox" name="vehicle" {...auto('awesome', {
+        <input type="checkbox" {...auto('awesome', {
           setter: 'checked',
           getter: 'onChange',
           extractor: (e) => e.target.checked
