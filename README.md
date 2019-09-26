@@ -84,3 +84,50 @@ const Form = () => {
 ```typescript
 const {auto, errors, update, form} = useForm(initial, validators, options)
 ```
+
+### Initial
+
+This is the base state of the form. Also the typescript types are inhered by this.
+
+###### Example
+
+```javascript
+const initial = {
+  username: 'defaultValue',
+  password: '',
+  rememberMe: true,
+}
+```
+
+### Validators
+
+A validator is an object that taked in either a `RegExp` or a `Function` (can be async). Optionally you can pass a message string that will be displayed instead of the default one.
+
+###### Example: Regular Expression
+
+```javascript
+const validators = {
+  // Only contains letters. 
+  // This could also be a (also async) function that returns a boolean.
+  username: /^[A-z]*$/,
+}
+```
+
+###### Example: Function
+
+```typescript
+const validators = {
+  username: (value: string) => value.lenght > 3,
+}
+```
+
+###### Example: With Object
+
+```javascript
+const validators = {
+  username: {
+    validator: /^[A-z]*$/,
+    message: 'My custom error message',
+  }
+}
+```
