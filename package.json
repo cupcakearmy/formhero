@@ -4,12 +4,15 @@
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
 	"scripts": {
+		"prepublishOnly": "tsc",
 		"test": "parcel -d public ./test/index.html",
 		"build": "tsc -w",
 		"dev": "pnpm run build & pnpm run test"
 	},
 	"browserslist": [
-		"last 1 year"
+		"last 2 Chrome versions",
+		"last 2 Firefox versions",
+		"last 2 Safari versions"
 	],
 	"devDependencies": {
 		"@types/react": "^16.9.3",
