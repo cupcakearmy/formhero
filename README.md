@@ -12,6 +12,7 @@
 - Customizable extractor, validator, getter and setters. (More in the docs)
 - No Deps
 - Tiny
+- React Hooks
 
 ## 🚀 Quickstart
 
