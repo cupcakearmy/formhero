@@ -1,10 +1,12 @@
-# formhero
+![Logo](./.github/Logo.svg)
 
-Fully customisable react form utility.
-
+<div style="text-align:center">
 ![Version](https://badgen.net/npm/v/formhero)
 ![Dependencies](https://badgen.net/david/dep/cupcakearmy/formhero)
 ![Size Badge](https://badgen.net/bundlephobia/minzip/formhero)
+    </div>
+
+**Fully customisable react form utility.**
 
 ## 🌈 Features
 
