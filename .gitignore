@@ -1,0 +1,11 @@
+# Node
+node_modules
+pnpm-lock.yaml
+package-lock.json
+
+# Parcel
+.cache
+public
+
+# Generated
+dist

@@ -1,0 +1,22 @@
+{
+	"name": "formhero",
+	"version": "0.0.1",
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
+	"scripts": {
+		"test": "parcel -d public ./test/index.html",
+		"build": "tsc -w",
+		"dev": "pnpm run build & pnpm run test"
+	},
+	"browserslist": [
+		"last 1 year"
+	],
+	"devDependencies": {
+		"@types/react": "^16.9.3",
+		"@types/react-dom": "^16.9.1",
+		"parcel-bundler": "^1.12.3",
+		"react": "^16.9.0",
+		"react-dom": "^16.9.0",
+		"typescript": "^3.6.2"
+	}
+}
