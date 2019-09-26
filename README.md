@@ -6,7 +6,7 @@ Fully customisable react form utility.
 ![Dependencies](https://badgen.net/david/dep/cupcakearmy/formhero)
 ![Size Badge](https://badgen.net/bundlephobia/minzip/formhero)
 
-## ✓ Features
+## 🌈 Features
 
 - Typescript compatible
 - Customizable extractor, validator, getter and setters. (More in the docs)
