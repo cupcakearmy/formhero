@@ -33,35 +33,39 @@ const Index: React.FC = () => {
     <div>
       <form onSubmit={_submit}>
         <div>Username</div>
-        <input {...auto('username')} />
-        {errors.username && 'Something went wrong'}
+        <input className="input" {...auto('username')} />
         <TextError error={errors.username} />
-        <br />
+        <br /><br />
 
         <div>Password</div>
-        <input {...auto('password')} />
+        <input className="input" {...auto('password')} />
         <TextError error={errors.password} />
-        <br />
+        <br /><br />
 
         <div>Which one to choose?</div>
-        <select {...auto('type')}>
-          <option value="redux-form">Redux-Form</option>
-          <option value="react-hook-forms">React-Hook-Forms</option>
-          <option value="formik">Formik</option>
-          <option value="formhero">FormHero</option>
-        </select>
-        <br />
+        <div className="select">
+          <select {...auto('type')}>
+            <option value="redux-form">Redux-Form</option>
+            <option value="react-hook-forms">React-Hook-Forms</option>
+            <option value="formik">Formik</option>
+            <option value="formhero">FormHero</option>
+          </select>
+        </div>
+        <br /><br />
 
-        <div>Is it awesome?</div>
-        <input type="checkbox" name="vehicle" {...auto('awesome', {
-          setter: 'checked',
-          getter: 'onChange',
-          extractor: (e) => e.target.checked
-        })} />
+
+        <label className="checkbox">
+          <input type="checkbox" {...auto('awesome', {
+            setter: 'checked',
+            getter: 'onChange',
+            extractor: (e) => e.target.checked
+          })} />
+          Is it awesome?
+        </label>
         <TextError error={errors.awesome} />
-        <br />
+        <br /><br />
 
-        <button type="submit">Go 🚀</button>
+        <button className="button" type="submit">Go 🚀</button>
       </form>
     </div>
   )
@@ -69,5 +73,5 @@ const Index: React.FC = () => {
 
 ReactDOM.render(<Index />, document.getElementById('root'))
 
-// @ts-ignore
+      // @ts-ignore
 // if (module.hot) module.hot.accept()
