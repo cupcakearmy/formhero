@@ -10,7 +10,7 @@
 
 - Typescript compatible
 - Customizable extractor, validator, getter and setters. (More in the docs)
-- No Deps
+- **0** Dependencies
 - Tiny
 - React Hooks
 
