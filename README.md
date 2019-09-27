@@ -14,6 +14,12 @@
 - Tiny
 - React Hooks
 
+###### Installation
+
+```
+npm i formhero
+```
+
 ## 🚀 Quickstart
 
 ```typescript
