@@ -9,7 +9,7 @@
 		"test": "parcel -d public ./test/index.html",
 		"build": "tsc",
 		"watch": "tsc -w",
-		"dev": "pnpm run build & pnpm run test"
+		"dev": "pnpm run watch & pnpm run test"
 	},
 	"browserslist": [
 		"last 2 Chrome versions",
