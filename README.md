@@ -17,18 +17,18 @@
 ###### Links
 
 - [*See it in action HERE*](https://cupcakearmy.github.io/formhero/)
-- [Examples](#Examples)
-- [Docs](#Documentation)
+- [Examples](#-examples)
+- [Docs](#-documentation)
   - Contructor
-    - [Initial State](#Initial)
-    - [Validators](#Validators)
-    - [Options](/#Options)
+    - [Initial State](#initial)
+    - [Validators](#validators)
+    - [Options](/#options)
   - Returns
-    - [auto](#Auto)
-    - [form](#Form)
-    - [errors](#Errors)
-    - [isValid](#isValid)
-    - [update](#Update)
+    - [auto](#auto)
+    - [form](#form)
+    - [errors](#errors)
+    - [isValid](#isvalid)
+    - [update](#update)
   
 
 ###### Installation
