@@ -189,3 +189,21 @@ const validators = {
   }
 }
 ```
+
+###### Example: Multiple Validators
+
+```javascript
+const validators = {
+  username: [{
+    validator: /^[A-z]*$/,
+    message: 'My custom error message',
+  },
+  /[\d]/,
+  async (value) => value.length > 0,
+  {
+    validator: (value) => true,
+    message: 'Some other error',
+  }
+  ]
+}
+```
