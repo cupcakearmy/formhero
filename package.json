@@ -1,6 +1,6 @@
 {
 	"name": "formhero",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
 	"scripts": {
@@ -16,6 +16,9 @@
 		"last 2 Firefox versions",
 		"last 2 Safari versions"
 	],
+	"peerDependencies": {
+		"react": "^16.8"
+	},
 	"devDependencies": {
 		"@types/react": "^16.9.3",
 		"@types/react-dom": "^16.9.1",
