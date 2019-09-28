@@ -16,7 +16,8 @@
 
 ###### Links
 
-- [*See it in action HERE*](https://cupcakearmy.github.io/formhero/)
+- [*Live Web*](https://cupcakearmy.github.io/formhero/)
+- [*Live React-Native*](https://snack.expo.io/@cupcakearmy/useform)
 - [Examples](#-examples)
 - [Docs](#-documentation)
   - Contructor
@@ -224,4 +225,69 @@ const validators = {
     }
   ]
 }
+```
+
+### Options
+
+Sometimes it's practical to have some different default values when using for example react-native or some other framework where the default `value`, `onChange` and `(e)=> e.target.value` do not apply.
+
+###### Example: React Native (Method 1 - Global options)
+
+[Check the Expo Snack for a live preview](https://snack.expo.io/@cupcakearmy/useform)
+
+```
+import * as React from 'react';
+import { Text, SafeAreaView, TextInput } from 'react-native';
+import { useForm } from 'formhero';
+
+const initial = {
+  username: 'i am all lowercase',
+};
+const validators = {};
+const options = {
+  setter: 'value', // This is not stricly necessarry as 'value' would already be the default.
+  getter: 'onChangeText',
+  extractor: text => text.toLowerCase(),
+};
+
+export default () => {
+  const { form, auto } = useForm(initial, validators, options);
+
+  return (
+    <SafeAreaView>
+      <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 2 }}
+        {...auto('username')}
+      />
+      <Text>{form.username}</Text>
+    </SafeAreaView>
+  );
+};
+```
+
+###### Example: React Native (Method 2 - Local overwrite)
+
+```javascipt
+// ...
+
+export default () => {
+  const { form, auto } = useForm({
+    username: 'i am all lowercase',
+  });
+
+  return (
+    <SafeAreaView>
+      <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 2 }}
+        {...auto('username', {
+          setter: 'value', // This is not stricly necessarry as 'value' would already be the default.
+          getter: 'onChangeText',
+          extractor: text => text.toLowerCase(),
+        })}
+      />
+      <Text>{form.username}</Text>
+    </SafeAreaView>
+  );
+};
+
 ```
