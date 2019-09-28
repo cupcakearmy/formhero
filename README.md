@@ -14,6 +14,23 @@
 - Tiny
 - React Hooks
 
+###### Links
+
+- [*See it in action HERE*](https://cupcakearmy.github.io/formhero/)
+- [Examples](#Examples)
+- [Docs](#Documentation)
+  - Contructor
+    - [Initial State](#Initial)
+    - [Validators](#Validators)
+    - [Options](/#Options)
+  - Returns
+    - [auto](#Auto)
+    - [form](#Form)
+    - [errors](#Errors)
+    - [isValid](#isValid)
+    - [update](#Update)
+  
+
 ###### Installation
 
 ```
@@ -135,7 +152,7 @@ const Form = () => {
 }
 ```
 
-## 📖 Docs
+## 📖 Documentation
 
 ### `useForm`
 
