@@ -16,8 +16,8 @@
 
 ###### Links
 
-- [*Live Web*](https://cupcakearmy.github.io/formhero/)
-- [*Live React-Native*](https://snack.expo.io/@cupcakearmy/useform)
+- [__*Live Web*__](https://cupcakearmy.github.io/formhero/)
+- [__*Live React-Native*__](https://snack.expo.io/@cupcakearmy/useform)
 - [Examples](#-examples)
 - [Docs](#-documentation)
   - Contructor
@@ -235,7 +235,7 @@ Sometimes it's practical to have some different default values when using for ex
 
 [Check the Expo Snack for a live preview](https://snack.expo.io/@cupcakearmy/useform)
 
-```
+```javascript
 import * as React from 'react';
 import { Text, SafeAreaView, TextInput } from 'react-native';
 import { useForm } from 'formhero';
@@ -267,7 +267,7 @@ export default () => {
 
 ###### Example: React Native (Method 2 - Local overwrite)
 
-```javascipt
+```javascript
 // ...
 
 export default () => {
