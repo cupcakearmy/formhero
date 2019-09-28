@@ -10,13 +10,19 @@ const TextError: React.FC<{ error?: string }> = ({ error }) => !error
 
 const Index: React.FC = () => {
 
-  const { auto, form, errors } = useForm({
+  const { auto, form, errors, isValid } = useForm({
     username: '',
     password: '',
     type: 'formhero',
     awesome: true,
   }, {
-    username: /^test/,
+    username: [
+      /^test/,
+      {
+        validator: async () => { return true },
+        message: 'Digits please',
+      }
+    ],
     password: {
       validator: /^.{3,}$/,
       message: 'To short',
@@ -26,7 +32,7 @@ const Index: React.FC = () => {
 
   const _submit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log(form, errors)
+    console.log(form, errors, isValid)
   }
 
   return (

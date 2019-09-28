@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 
 
@@ -20,13 +20,26 @@ export type useFormValidatorObject = {
 
 export type useFormValidator = useFormValidatorMethod | useFormValidatorObject
 
+export type useFormValidatorParameter = useFormValidator | useFormValidator[]
+
 export const HTMLInputExtractor: useFormExtractor = (e: React.FormEvent<HTMLInputElement>) => e.currentTarget.value
 export const HTMLCheckboxExtractor: useFormExtractor = (e: React.FormEvent<HTMLInputElement>) => e.currentTarget.checked
 
-export const useForm = <T, U extends { [key in keyof T]: useFormValidator }, E extends { [key in keyof U]?: string }>(init: T, validators: Partial<U> = {}, options: useFormOptions = {}) => {
+function isFormValidatorObject(validator: useFormValidatorMethod | useFormValidatorObject): validator is useFormValidatorObject {
+	return validator.constructor.name === 'Object'
+}
+
+const defaultErrorMessage = (key: any) => `Error in ${key}`
+
+export const useForm = <T, U extends { [key in keyof T]: useFormValidatorParameter }, E extends { [key in keyof U]?: string }>(init: T, validators: Partial<U> = {}, options: useFormOptions = {}) => {
 	const [form, setForm] = useState<T>(init)
 
 	const [errors, setErrors] = useState<Partial<E>>({})
+	const [isValid, setIsValid] = useState(true);
+
+	useEffect(() => {
+		setIsValid(!Object.values(errors).reduce((acc, cur) => acc || cur !== undefined, false))
+	}, [errors])
 
 	const _set = (key: keyof T, value: any) => {
 		setForm({
@@ -35,34 +48,48 @@ export const useForm = <T, U extends { [key in keyof T]: useFormValidator }, E e
 		})
 	}
 
-	const _validateAll = async (value: any, validator: useFormValidatorMethod): Promise<boolean> => {
-		if (validator.constructor.name === 'Function' || validator.constructor.name === 'AsyncFunction')
+	const _validateAll = async (value: any, object: useFormValidator): Promise<boolean> => {
+		const validator = isFormValidatorObject(object) ? object.validator : object
+
+		if (validator.constructor.name === 'Function')
 			return (validator as useFormValidatorFunction)(value)
+		else if (validator.constructor.name === 'AsyncFunction')
+			return await (validator as useFormValidatorFunction)(value)
 		else if (validator.constructor.name === 'RegExp')
 			return (validator as RegExp).test(value)
 		else return false
 	}
 
-	const _getValidatorMessage = (key: keyof T): string => {
-		// @ts-ignore
-		if (validators[key] && validators[key].message) return validators[key].message
-		else return `Error in: ${key}`
-	}
-
 	const _validate = (key: keyof T, value: any) => {
-		const validator: useFormValidator | undefined = validators[key]
+		const validator: useFormValidatorParameter | undefined = validators[key]
 		if (!validator) return
 
-		// @ts-ignore
-		_validateAll(value, validator.constructor.name === 'Object' ? (validator as useFormValidatorObject).validator : validator)
-			.then((valid: boolean) => {
-				setErrors({
-					...errors,
-					[key]: valid
-						? undefined
-						: _getValidatorMessage(key),
+		if (Array.isArray(validator)) {
+			Promise.all(validator.map(v => _validateAll(value, v)))
+				.then(result => {
+					const index = result.indexOf(false)
+					setErrors({
+						...errors,
+						[key]: index === -1
+							? undefined
+							: isFormValidatorObject(validator[index]) && (validator[index] as useFormValidatorObject).message
+								? (validator[index] as useFormValidatorObject).message
+								: defaultErrorMessage(key)
+					})
 				})
-			})
+		} else {
+			_validateAll(value, validator)
+				.then(valid => {
+					setErrors({
+						...errors,
+						[key]: valid
+							? undefined
+							: isFormValidatorObject(validator) && validator.message
+								? validator.message
+								: defaultErrorMessage(key)
+					})
+				})
+		}
 	}
 
 	const update = (key: keyof T, extractor = options.extractor) => (value: any) => {
@@ -76,5 +103,5 @@ export const useForm = <T, U extends { [key in keyof T]: useFormValidator }, E e
 		[opts.setter || options.setter || 'value']: form[key] as any,
 	})
 
-	return { form, update, auto, errors }
+	return { form, update, auto, errors, isValid }
 }

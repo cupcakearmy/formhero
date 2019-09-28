@@ -7,10 +7,24 @@ const Index: React.FC = () => {
 
 	const { auto, form, errors } = useForm({
 		username: '',
+		email: '',
 		password: ''
 	}, {
 		username: value => value.length > 3,
-		password: /[\d]{1,}/
+		email: {
+			validator: /@/,
+			message: 'Must contain an @',
+		},
+		password: [
+			{
+				validator: /[A-Z]/,
+				message: 'Must contain an uppercase letter'
+			},
+			{
+				validator: /[\d]/,
+				message: 'Must contain a digit'
+			},
+		]
 	})
 
 	return (
@@ -21,8 +35,11 @@ const Index: React.FC = () => {
 			<input {...auto('username')} placeholder="Username" />
 			{errors.username && 'Must be longer than 3'}
 
+			<input {...auto('email')} placeholder="EMail" />
+			{errors.email}
+
 			<input {...auto('password')} placeholder="Password" type="password" />
-			{errors.password && 'Must contain a number'}
+			{errors.password}
 
 		</form>
 	)
