@@ -5,7 +5,7 @@ import { useForm } from '../'
 
 const Index: React.FC = () => {
 
-	const { auto, form, errors } = useForm({
+	const { auto, form, errors, isValid } = useForm({
 		username: '',
 		email: '',
 		password: ''
@@ -28,7 +28,10 @@ const Index: React.FC = () => {
 	})
 
 	return (
-		<form>
+		<form onSubmit={(e) => {
+			e.preventDefault()
+			if (isValid) console.log(form)
+		}}>
 
 			<h1>Errors & Validation</h1>
 
@@ -40,6 +43,8 @@ const Index: React.FC = () => {
 
 			<input {...auto('password')} placeholder="Password" type="password" />
 			{errors.password}
+
+			<input type="submit" />
 
 		</form>
 	)
