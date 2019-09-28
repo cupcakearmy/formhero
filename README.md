@@ -52,67 +52,86 @@ const Form = () => {
 }
 ```
 
-## 🔥 Avanced Example
+## 🔥 Examples
+
+### Validation
 
 ```typescript
-import ReactDOM from 'react-dom'
-import { useForm } from 'formhero'
-
 const Form = () => {
 
-  const { auto, form, errors } = useForm({
-    username: '',
-    password: '',
-    type: 'formhero',
-    awesome: true,
-  }, {
-    username: /^test/,
-    password: {
-      validator: /^.{3,}$/,
-      message: 'To short',
-    },
-    awesome: (value) => !!value
-  })
+	const { auto, form, errors } = useForm({
+		username: '',
+		email: '',
+		password: ''
+	}, {
+		username: value => value.length > 3,
+		email: {
+			validator: /@/,
+			message: 'Must contain an @',
+		},
+		password: [
+			{
+				validator: /[A-Z]/,
+				message: 'Must contain an uppercase letter'
+			},
+			{
+				validator: /[\d]/,
+				message: 'Must contain a digit'
+			},
+		]
+	})
 
-  const _submit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log(form, errors)
-  }
+	return (
+		<form>
 
-  return (
-    <div>
-      <form onSubmit={_submit}>
-        
-        <div>Username</div>
-        <input {...auto('username')} />
-        {errors.username && 'Something went wrong'}
-        <br />
+			<h1>Errors & Validation</h1>
 
-        <div>Password</div>
-        <input {...auto('password')} />
-        <br />
+			<input {...auto('username')} placeholder="Username" />
+			{errors.username && 'Must be longer than 3'}
 
-        <div>Which one to choose?</div>
-        <select {...auto('type')}>
-          <option value="redux-form">Redux-Form</option>
-          <option value="react-hook-forms">React-Hook-Forms</option>
-          <option value="formik">Formik</option>
-          <option value="formhero">FormHero</option>
-        </select>
-        <br />
+			<input {...auto('email')} placeholder="EMail" />
+			{errors.email}
 
-        <div>Is it awesome?</div>
-        <input type="checkbox" {...auto('awesome', {
-          setter: 'checked',
-          getter: 'onChange',
-          extractor: (e) => e.target.checked
-        })} />
-        <br />
+			<input {...auto('password')} placeholder="Password" type="password" />
+			{errors.password}
 
-        <button type="submit">Go 🚀</button>
-      </form>
-    </div>
-  )
+		</form>
+	)
+}
+```
+
+### Easy Customization
+
+Often it happens that you use a specific input or framework, so the default getter, setter and extractor for the event won't cut it. No worries: formhero got you covered!
+
+```typescript
+const Form = () => {
+
+	const { auto, form, errors } = useForm({
+		awesome: true,
+	})
+
+	return (
+		<form onSubmit={e => {
+			e.preventDefault()
+			console.log(form)
+		}}>
+
+			<h1>Custom</h1>
+
+			<label>
+				<input type="checkbox" {...auto('awesome', {
+					setter: 'checked',
+					getter: 'onChange',
+					extractor: (e) => e.target.checked
+				})} />
+				Is it awesome?
+        	</label>
+
+			<input type="submit" />
+
+		</form>
+	)
 }
 ```
 
