@@ -291,3 +291,92 @@ export default () => {
 };
 
 ```
+
+### Auto
+
+The `auto` object is used to bind the form state to the input.
+
+
+###### Example: Simple
+
+```javascript
+const { auto } = useForm()
+
+<input {...auto('username')} />
+```
+
+
+###### Example: With custom options
+
+All are optional.
+
+```javascript
+const { auto } = useForm()
+
+<input {...auto('username', {
+  getter: 'onChage',
+  setter: 'value',
+  extractor: (e) => e.target.value
+})} />
+```
+
+## Form 
+
+This is the form state that you can use when submitting the data
+
+###### Example 
+
+```javascript
+
+const { form } = useForm(...);
+
+// ...
+
+<form onSubmit={()=> console.log(form)}>
+  // ...
+</form>
+```
+
+## Errors
+
+This object contains the error messages if a field is not valid.
+The error message can be specified by you, otherwise it will return `Error in ${field}`
+
+###### Example
+
+```javascript
+const { errors } = useForm(...)
+
+//...
+
+{errors.username}
+{errors.password}
+```
+
+###### isValid
+
+`isValid` is a little simple helper that checks whether the `error` object is clear or if there are errors left.
+
+## Update
+
+The `update` function allows you to manually change and assign the state of the form. This can be usefull when you want to reset a field or the whole form. The input must have the same type as the initial state.
+
+###### Example
+
+```javascript
+const { form, update } = useForm(...)
+
+const resetUsername = () => {
+  update({
+    ...form,
+    username: '',
+  })
+}
+
+const resetForm = () => {
+  update({
+    username: '',
+    password: '',
+  })
+}
+```
