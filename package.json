@@ -6,7 +6,7 @@
 	"scripts": {
 		"prepublishOnly": "rm -rf ./dist && tsc",
 		"examples": "parcel -d public ./examples/index.html",
-		"examples:build": "parcel build --no-source-maps --public-url /formhero/ -d docs examples/index.html",
+		"examples:build": "rm -rf ./docs && parcel build --no-source-maps --public-url /formhero/ -d docs examples/index.html",
 		"build": "tsc",
 		"test": "parcel -d public ./test/index.html",
 		"watch": "tsc -w",
