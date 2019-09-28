@@ -4,9 +4,11 @@
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
 	"scripts": {
-		"prepublishOnly": "tsc",
+		"prepublishOnly": "rm -rf ./dist && tsc",
+		"examples": "parcel -d public ./examples/index.html",
 		"test": "parcel -d public ./test/index.html",
-		"build": "tsc -w",
+		"build": "tsc",
+		"watch": "tsc -w",
 		"dev": "pnpm run build & pnpm run test"
 	},
 	"browserslist": [
