@@ -18,7 +18,7 @@
 
 - [__*Live Web*__](https://cupcakearmy.github.io/formhero/)
 - [__*Live React-Native*__](https://snack.expo.io/@cupcakearmy/useform)
-- [Examples](#-examples-examples-directory)
+- [Examples](#-examples-more-here)
 - [Docs](#-documentation)
   - Contructor
     - [Initial State](#initial)
@@ -70,7 +70,7 @@ const Form = () => {
 }
 ```
 
-## 🔥 Examples [(Examples Directory)](https://github.com/CupCakeArmy/formhero/tree/master/examples)
+## 🔥 Examples [(More Here)](https://github.com/CupCakeArmy/formhero/tree/master/examples)
 
 ### Validation
 
