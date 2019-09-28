@@ -23,7 +23,7 @@
   - Contructor
     - [Initial State](#initial)
     - [Validators](#validators)
-    - [Options](/#options)
+    - [Options](#options)
   - Returns
     - [auto](#auto)
     - [form](#form)
@@ -353,7 +353,7 @@ const { errors } = useForm(...)
 {errors.password}
 ```
 
-###### isValid
+## isValid
 
 `isValid` is a little simple helper that checks whether the `error` object is clear or if there are errors left.
 
