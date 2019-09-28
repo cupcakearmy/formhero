@@ -14,6 +14,24 @@
 - Tiny
 - React Hooks
 
+###### Links
+
+- [__*Live Web*__](https://cupcakearmy.github.io/formhero/)
+- [__*Live React-Native*__](https://snack.expo.io/@cupcakearmy/useform)
+- [Examples](#-examples-more-here)
+- [Docs](#-documentation)
+  - Contructor
+    - [Initial State](#initial)
+    - [Validators](#validators)
+    - [Options](#options)
+  - Returns
+    - [auto](#auto)
+    - [form](#form)
+    - [errors](#errors)
+    - [isValid](#isvalid)
+    - [update](#update)
+  
+
 ###### Installation
 
 ```
@@ -52,71 +70,90 @@ const Form = () => {
 }
 ```
 
-## 🔥 Avanced Example
+## 🔥 Examples [(More Here)](https://github.com/CupCakeArmy/formhero/tree/master/examples)
+
+### Validation
 
 ```typescript
-import ReactDOM from 'react-dom'
-import { useForm } from 'formhero'
-
 const Form = () => {
 
   const { auto, form, errors } = useForm({
     username: '',
-    password: '',
-    type: 'formhero',
-    awesome: true,
+    email: '',
+    password: ''
   }, {
-    username: /^test/,
-    password: {
-      validator: /^.{3,}$/,
-      message: 'To short',
+    username: value => value.length > 3,
+    email: {
+      validator: /@/,
+      message: 'Must contain an @',
     },
-    awesome: (value) => !!value
+    password: [
+      {
+        validator: /[A-Z]/,
+        message: 'Must contain an uppercase letter'
+      },
+      {
+        validator: /[\d]/,
+        message: 'Must contain a digit'
+      },
+    ]
   })
 
-  const _submit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log(form, errors)
-  }
+  return (
+    <form>
+
+      <h1>Errors & Validation</h1>
+
+      <input {...auto('username')} placeholder="Username" />
+      {errors.username && 'Must be longer than 3'}
+
+      <input {...auto('email')} placeholder="EMail" />
+      {errors.email}
+
+      <input {...auto('password')} placeholder="Password" type="password" />
+      {errors.password}
+
+    </form>
+  )
+}
+```
+
+### Easy Customization
+
+Often it happens that you use a specific input or framework, so the default getter, setter and extractor for the event won't cut it. No worries: formhero got you covered!
+
+```typescript
+const Form = () => {
+
+  const { auto, form, errors } = useForm({
+    awesome: true,
+  })
 
   return (
-    <div>
-      <form onSubmit={_submit}>
-        
-        <div>Username</div>
-        <input {...auto('username')} />
-        {errors.username && 'Something went wrong'}
-        <br />
+    <form onSubmit={e => {
+      e.preventDefault()
+      console.log(form)
+    }}>
 
-        <div>Password</div>
-        <input {...auto('password')} />
-        <br />
+      <h1>Custom</h1>
 
-        <div>Which one to choose?</div>
-        <select {...auto('type')}>
-          <option value="redux-form">Redux-Form</option>
-          <option value="react-hook-forms">React-Hook-Forms</option>
-          <option value="formik">Formik</option>
-          <option value="formhero">FormHero</option>
-        </select>
-        <br />
-
-        <div>Is it awesome?</div>
+      <label>
         <input type="checkbox" {...auto('awesome', {
           setter: 'checked',
           getter: 'onChange',
           extractor: (e) => e.target.checked
         })} />
-        <br />
+        Is it awesome?
+          </label>
 
-        <button type="submit">Go 🚀</button>
-      </form>
-    </div>
+      <input type="submit" />
+
+    </form>
   )
 }
 ```
 
-## 📖 Docs
+## 📖 Documentation
 
 ### `useForm`
 
@@ -168,5 +205,178 @@ const validators = {
     validator: /^[A-z]*$/,
     message: 'My custom error message',
   }
+}
+```
+
+###### Example: Multiple Validators
+
+```javascript
+const validators = {
+  username: [
+    {
+      validator: /^[A-z]*$/,
+      message: 'My custom error message',
+    },
+    /[\d]/,
+    async (value) => value.length > 0,
+    {
+      validator: (value) => true,
+      message: 'Some other error',
+    }
+  ]
+}
+```
+
+### Options
+
+Sometimes it's practical to have some different default values when using for example react-native or some other framework where the default `value`, `onChange` and `(e)=> e.target.value` do not apply.
+
+###### Example: React Native (Method 1 - Global options)
+
+[Check the Expo Snack for a live preview](https://snack.expo.io/@cupcakearmy/useform)
+
+```javascript
+import * as React from 'react';
+import { Text, SafeAreaView, TextInput } from 'react-native';
+import { useForm } from 'formhero';
+
+const initial = {
+  username: 'i am all lowercase',
+};
+const validators = {};
+const options = {
+  setter: 'value', // This is not stricly necessarry as 'value' would already be the default.
+  getter: 'onChangeText',
+  extractor: text => text.toLowerCase(),
+};
+
+export default () => {
+  const { form, auto } = useForm(initial, validators, options);
+
+  return (
+    <SafeAreaView>
+      <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 2 }}
+        {...auto('username')}
+      />
+      <Text>{form.username}</Text>
+    </SafeAreaView>
+  );
+};
+```
+
+###### Example: React Native (Method 2 - Local overwrite)
+
+```javascript
+// ...
+
+export default () => {
+  const { form, auto } = useForm({
+    username: 'i am all lowercase',
+  });
+
+  return (
+    <SafeAreaView>
+      <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 2 }}
+        {...auto('username', {
+          setter: 'value', // This is not stricly necessarry as 'value' would already be the default.
+          getter: 'onChangeText',
+          extractor: text => text.toLowerCase(),
+        })}
+      />
+      <Text>{form.username}</Text>
+    </SafeAreaView>
+  );
+};
+
+```
+
+### Auto
+
+The `auto` object is used to bind the form state to the input.
+
+
+###### Example: Simple
+
+```javascript
+const { auto } = useForm()
+
+<input {...auto('username')} />
+```
+
+
+###### Example: With custom options
+
+All are optional.
+
+```javascript
+const { auto } = useForm()
+
+<input {...auto('username', {
+  getter: 'onChage',
+  setter: 'value',
+  extractor: (e) => e.target.value
+})} />
+```
+
+## Form 
+
+This is the form state that you can use when submitting the data
+
+###### Example 
+
+```javascript
+
+const { form } = useForm(...);
+
+// ...
+
+<form onSubmit={()=> console.log(form)}>
+  // ...
+</form>
+```
+
+## Errors
+
+This object contains the error messages if a field is not valid.
+The error message can be specified by you, otherwise it will return `Error in ${field}`
+
+###### Example
+
+```javascript
+const { errors } = useForm(...)
+
+//...
+
+{errors.username}
+{errors.password}
+```
+
+## isValid
+
+`isValid` is a little simple helper that checks whether the `error` object is clear or if there are errors left.
+
+## Update
+
+The `update` function allows you to manually change and assign the state of the form. This can be usefull when you want to reset a field or the whole form. The input must have the same type as the initial state.
+
+###### Example
+
+```javascript
+const { form, update } = useForm(...)
+
+const resetUsername = () => {
+  update({
+    ...form,
+    username: '',
+  })
+}
+
+const resetForm = () => {
+  update({
+    username: '',
+    password: '',
+  })
 }
 ```
