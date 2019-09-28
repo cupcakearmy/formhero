@@ -59,44 +59,44 @@ const Form = () => {
 ```typescript
 const Form = () => {
 
-	const { auto, form, errors } = useForm({
-		username: '',
-		email: '',
-		password: ''
-	}, {
-		username: value => value.length > 3,
-		email: {
-			validator: /@/,
-			message: 'Must contain an @',
-		},
-		password: [
-			{
-				validator: /[A-Z]/,
-				message: 'Must contain an uppercase letter'
-			},
-			{
-				validator: /[\d]/,
-				message: 'Must contain a digit'
-			},
-		]
-	})
+  const { auto, form, errors } = useForm({
+    username: '',
+    email: '',
+    password: ''
+  }, {
+    username: value => value.length > 3,
+    email: {
+      validator: /@/,
+      message: 'Must contain an @',
+    },
+    password: [
+      {
+        validator: /[A-Z]/,
+        message: 'Must contain an uppercase letter'
+      },
+      {
+        validator: /[\d]/,
+        message: 'Must contain a digit'
+      },
+    ]
+  })
 
-	return (
-		<form>
+  return (
+    <form>
 
-			<h1>Errors & Validation</h1>
+      <h1>Errors & Validation</h1>
 
-			<input {...auto('username')} placeholder="Username" />
-			{errors.username && 'Must be longer than 3'}
+      <input {...auto('username')} placeholder="Username" />
+      {errors.username && 'Must be longer than 3'}
 
-			<input {...auto('email')} placeholder="EMail" />
-			{errors.email}
+      <input {...auto('email')} placeholder="EMail" />
+      {errors.email}
 
-			<input {...auto('password')} placeholder="Password" type="password" />
-			{errors.password}
+      <input {...auto('password')} placeholder="Password" type="password" />
+      {errors.password}
 
-		</form>
-	)
+    </form>
+  )
 }
 ```
 
@@ -107,31 +107,31 @@ Often it happens that you use a specific input or framework, so the default gett
 ```typescript
 const Form = () => {
 
-	const { auto, form, errors } = useForm({
-		awesome: true,
-	})
+  const { auto, form, errors } = useForm({
+    awesome: true,
+  })
 
-	return (
-		<form onSubmit={e => {
-			e.preventDefault()
-			console.log(form)
-		}}>
+  return (
+    <form onSubmit={e => {
+      e.preventDefault()
+      console.log(form)
+    }}>
 
-			<h1>Custom</h1>
+      <h1>Custom</h1>
 
-			<label>
-				<input type="checkbox" {...auto('awesome', {
-					setter: 'checked',
-					getter: 'onChange',
-					extractor: (e) => e.target.checked
-				})} />
-				Is it awesome?
-        	</label>
+      <label>
+        <input type="checkbox" {...auto('awesome', {
+          setter: 'checked',
+          getter: 'onChange',
+          extractor: (e) => e.target.checked
+        })} />
+        Is it awesome?
+          </label>
 
-			<input type="submit" />
+      <input type="submit" />
 
-		</form>
-	)
+    </form>
+  )
 }
 ```
 
