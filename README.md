@@ -18,7 +18,7 @@
 
 - [__*Live Web*__](https://cupcakearmy.github.io/formhero/)
 - [__*Live React-Native*__](https://snack.expo.io/@cupcakearmy/useform)
-- [Examples](#examples)
+- [Examples](#-examples-examples-directory)
 - [Docs](#-documentation)
   - Contructor
     - [Initial State](#initial)
