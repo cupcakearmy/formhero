@@ -121,7 +121,7 @@ const Form = () => {
 ### `useForm`
 
 ```typescript
-const {auto, errors, update, form} = useForm(initial, validators, options)
+const {auto, errors, update, form, isValid} = useForm(initial, validators, options)
 ```
 
 ### Initial
