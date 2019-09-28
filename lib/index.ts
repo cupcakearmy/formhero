@@ -4,14 +4,10 @@ import React, { useState } from 'react'
 
 export type useFormExtractor = (from: any) => any
 
-export type useFormAutoOptions = {
-	getter?: string,
-	setter?: string,
-	extractor?: useFormExtractor
-}
-
 export type useFormOptions = {
 	extractor?: useFormExtractor,
+	getter?: string,
+	setter?: string,
 }
 
 export type useFormValidatorFunction = ((s: any) => boolean | Promise<boolean>)
@@ -75,9 +71,9 @@ export const useForm = <T, U extends { [key in keyof T]: useFormValidator }, E e
 		_validate(key, extracted)
 	}
 
-	const auto = (key: keyof T, opts: useFormAutoOptions = {}) => ({
-		[opts.getter || 'onChange']: update(key, opts.extractor),
-		[opts.setter || 'value']: form[key] as any,
+	const auto = (key: keyof T, opts: useFormOptions = {}) => ({
+		[opts.getter || options.getter || 'onChange']: update(key, opts.extractor),
+		[opts.setter || options.setter || 'value']: form[key] as any,
 	})
 
 	return { form, update, auto, errors }
