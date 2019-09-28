@@ -6,8 +6,9 @@
 	"scripts": {
 		"prepublishOnly": "rm -rf ./dist && tsc",
 		"examples": "parcel -d public ./examples/index.html",
-		"test": "parcel -d public ./test/index.html",
+		"examples:build": "parcel build --no-source-maps --public-url /formhero/ -d docs examples/index.html",
 		"build": "tsc",
+		"test": "parcel -d public ./test/index.html",
 		"watch": "tsc -w",
 		"dev": "pnpm run watch & pnpm run test"
 	},
