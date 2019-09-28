@@ -10,11 +10,49 @@
 
 - Typescript compatible
 - Customizable extractor, validator, getter and setters. (More in the docs)
-- No Deps
+- **0** Dependencies
 - Tiny
 - React Hooks
 
+###### Installation
+
+```
+npm i formhero
+```
+
 ## 🚀 Quickstart
+
+```typescript
+import ReactDOM from 'react-dom'
+import { useForm } from 'formhero'
+
+const Form = () => {
+
+  const { auto, form } = useForm({
+    username: '',
+    password: '',
+  })
+
+  const _submit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log(form)
+  }
+
+  return (
+    <div>
+      <form onSubmit={_submit}>
+        
+        <input {...auto('username')} />
+        <input {...auto('password')} />
+
+        <button type="submit">Go 🚀</button>
+      </form>
+    </div>
+  )
+}
+```
+
+## 🔥 Avanced Example
 
 ```typescript
 import ReactDOM from 'react-dom'
