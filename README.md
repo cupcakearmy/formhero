@@ -1,4 +1,4 @@
-![Logo](./.github/Logo.svg)
+![Logo](./.github/Logo.jpg)
 
 ![Version](https://badgen.net/npm/v/formhero)
 ![Dependencies](https://badgen.net/david/dep/cupcakearmy/formhero)
