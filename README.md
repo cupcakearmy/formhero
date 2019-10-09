@@ -11,7 +11,7 @@
 - Typescript compatible
 - Customizable extractor, validator, getter and setters. (More in the docs)
 - **0** Dependencies
-- Tiny
+- Tiny **~0.7kB**
 - React Hooks
 
 ###### Installation
