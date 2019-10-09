@@ -14,13 +14,19 @@
 - Tiny
 - React Hooks
 
-## Demo
+###### Installation
+
+```
+npm i formhero
+```
+
+### 👁 Demos
 
 - [__*Live Web*__](https://cupcakearmy.github.io/formhero/)
 - [__*Live Codesandbox*__](https://codesandbox.io/embed/formhero-simple-bdcx2?expanddevtools=1&fontsize=14)
 - [__*Live React-Native*__](https://snack.expo.io/@cupcakearmy/useform)
 
-###### Links
+### Links
 
 - [Examples](#-examples-more-here)
 - [Docs](#-documentation)
@@ -34,13 +40,7 @@
     - [errors](#errors)
     - [isValid](#isvalid)
     - [update](#update)
-  
 
-###### Installation
-
-```
-npm i formhero
-```
 
 ## 🚀 Quickstart
 
