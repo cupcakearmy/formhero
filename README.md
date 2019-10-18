@@ -43,7 +43,7 @@ npm i formhero
 
 ## 🤔 Motivation
 
-So why write yet another form utility you might ask? First off, I don't like the Formik approach. In my humble opition formik is very verbose and requires lots of boilerplate. Also does not work with hooks. [react-hook-form](https://react-hook-form.com/) is a very cool library and it is the main inspiration for formhero. It does almost everything right... typescript, no deps, small, concise. The problem that I found while using it was that 3rd party ui libs like ant-design or fabric ui do not always have the standart `onChange` or `value` props in their components. That is where react-hook-form starts falling apart. This is what formhero tries to address in the most minimalistic way possible, with as little code as needed. All in pure typescript and no deps.
+So why write yet another form utility you might ask? First off, I don't like the Formik approach. In my humble opition formik is very verbose and requires lots of boilerplate. Also does not work with hooks. [react-hook-form](https://react-hook-form.com/) is a very cool library and it is the main inspiration for formhero. It does almost everything right... typescript, no deps, small, concise. The problem that I found while using it was that 3rd party ui libs like [Ant Design](https://ant.design/) or [Fabric UI](https://developer.microsoft.com/en-us/fabric#/controls/web) do not always have the standart `onChange` or `value` props in their components. That is where react-hook-form starts falling apart. This is what formhero tries to address in the most minimalistic way possible, with as little code as needed. All in pure typescript and no deps.
 
 ## 🚀 Quickstart
 
