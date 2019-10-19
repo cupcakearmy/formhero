@@ -3,32 +3,33 @@ import ReactDOM from 'react-dom'
 
 import { useForm } from '../'
 
-
-const TextError: React.FC<{ error?: string }> = ({ error }) => !error
-  ? null
-  : <div className="has-text-danger">{error}</div>
+const TextError: React.FC<{ error?: string }> = ({ error }) => (!error ? null : <div className="has-text-danger">{error}</div>)
 
 const Index: React.FC = () => {
-
-  const { auto, form, errors, isValid } = useForm({
-    username: '',
-    password: '',
-    type: 'formhero',
-    awesome: true,
-  }, {
-    username: [
-      /^test/,
-      {
-        validator: async () => { return true },
-        message: 'Digits please',
-      }
-    ],
-    password: {
-      validator: /^.{3,}$/,
-      message: 'To short',
+  const { auto, form, errors, isValid } = useForm(
+    {
+      username: '',
+      password: '',
+      type: 'formhero',
+      awesome: true,
     },
-    awesome: (value) => !!value
-  })
+    {
+      username: [
+        /^test/,
+        {
+          validator: async () => {
+            return true
+          },
+          message: 'Digits please',
+        },
+      ],
+      password: {
+        validator: /^.{3,}$/,
+        message: 'To short',
+      },
+      awesome: value => !!value,
+    }
+  )
 
   const _submit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,12 +42,14 @@ const Index: React.FC = () => {
         <div>Username</div>
         <input className="input" {...auto('username')} />
         <TextError error={errors.username} />
-        <br /><br />
+        <br />
+        <br />
 
         <div>Password</div>
         <input className="input" {...auto('password')} />
         <TextError error={errors.password} />
-        <br /><br />
+        <br />
+        <br />
 
         <div>Which one to choose?</div>
         <div className="select">
@@ -57,21 +60,27 @@ const Index: React.FC = () => {
             <option value="formhero">FormHero</option>
           </select>
         </div>
-        <br /><br />
-
+        <br />
+        <br />
 
         <label className="checkbox">
-          <input type="checkbox" {...auto('awesome', {
-            setter: 'checked',
-            getter: 'onChange',
-            extractor: (e) => e.target.checked
-          })} />
+          <input
+            type="checkbox"
+            {...auto('awesome', {
+              setter: 'checked',
+              getter: 'onChange',
+              extractor: e => e.target.checked,
+            })}
+          />
           Is it awesome?
         </label>
         <TextError error={errors.awesome} />
-        <br /><br />
+        <br />
+        <br />
 
-        <button className="button" type="submit">Go 🚀</button>
+        <button className="button" type="submit">
+          Go 🚀
+        </button>
       </form>
     </div>
   )
@@ -79,5 +88,5 @@ const Index: React.FC = () => {
 
 ReactDOM.render(<Index />, document.getElementById('root'))
 
-      // @ts-ignore
+// @ts-ignore
 // if (module.hot) module.hot.accept()
