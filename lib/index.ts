@@ -93,5 +93,5 @@ export const useForm = <T, U extends { [key in keyof T]: useFormValidatorParamet
     [opts.setter || options.setter || 'value']: form[key] as any,
   })
 
-  return { form, update, field, errors, isValid }
+  return { form, update, field, errors, isValid, setForm, setErrors }
 }

@@ -5,35 +5,44 @@ import { useForm } from '../'
 
 const TextError: React.FC<{ error?: string }> = ({ error }) => (!error ? null : <div className="has-text-danger">{error}</div>)
 
+const initial = {
+  username: '',
+  password: '',
+  type: 'formhero',
+  awesome: true,
+}
+
 const Index: React.FC = () => {
-  const { field, form, errors, isValid } = useForm(
-    {
-      username: '',
-      password: '',
-      type: 'formhero',
-      awesome: true,
-    },
-    {
-      username: [
-        /^test/,
-        {
-          validator: async () => {
-            return true
-          },
-          message: 'Digits please',
+  const { field, form, errors, isValid, setForm, setErrors } = useForm(initial, {
+    username: [
+      /^test/,
+      {
+        validator: async () => {
+          return true
         },
-      ],
-      password: {
-        validator: /^.{3,}$/,
-        message: 'To short',
+        message: 'Digits please',
       },
-      awesome: value => !!value,
-    }
-  )
+    ],
+    password: {
+      validator: /^.{3,}$/,
+      message: 'To short',
+    },
+    awesome: value => !!value,
+  })
 
   const _submit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log(form, errors, isValid)
+  }
+
+  const reset = () => {
+    setForm(initial)
+  }
+
+  const error = () => {
+    setErrors({
+      username: 'nope',
+    })
   }
 
   return (
@@ -81,12 +90,21 @@ const Index: React.FC = () => {
         <button className="button" type="submit">
           Go 🚀
         </button>
+
+        <br />
+        <br />
+        <button className="button" onClick={reset}>
+          Reset 🔥
+        </button>
+
+        <br />
+        <br />
+        <button className="button" onClick={error}>
+          Set Error ❌
+        </button>
       </form>
     </div>
   )
 }
 
 ReactDOM.render(<Index />, document.getElementById('root'))
-
-// @ts-ignore
-// if (module.hot) module.hot.accept()
