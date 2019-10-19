@@ -15,13 +15,14 @@ const initial = {
 const Index: React.FC = () => {
   const { field, form, errors, isValid, setForm, setErrors, setField } = useForm(initial, {
     username: [
-      /^test/,
+      /^abc/,
       {
-        validator: async () => {
+        validator: async (s: string) => {
           return true
         },
-        message: 'Digits please',
+        message: 'Async shit not working',
       },
+      (s: string) => (s.includes('d') ? true : 'Needs the D'),
     ],
     password: {
       validator: /^.{3,}$/,

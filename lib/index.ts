@@ -8,7 +8,8 @@ export type useFormOptions = {
   setter?: string
 }
 
-export type useFormValidatorFunction = (s: any) => boolean | Promise<boolean>
+export type useFormValidatorFunctionReturn = boolean | string
+export type useFormValidatorFunction = (s: any) => useFormValidatorFunctionReturn | Promise<useFormValidatorFunctionReturn>
 export type useFormValidatorMethod = useFormValidatorFunction | RegExp
 
 export type useFormValidatorObject = {
@@ -50,7 +51,7 @@ export const useForm = <T extends object, U extends { [key in keyof T]: useFormV
     })
   }
 
-  const _validateAll = async (value: any, object: useFormValidator): Promise<boolean> => {
+  const _validateAll = async (value: any, object: useFormValidator): Promise<useFormValidatorFunctionReturn> => {
     const validator = isFormValidatorObject(object) ? object.validator : object
 
     if (validator.constructor.name === 'Function') return (validator as useFormValidatorFunction)(value)
@@ -59,28 +60,26 @@ export const useForm = <T extends object, U extends { [key in keyof T]: useFormV
     else return false
   }
 
+  const _getErrorMessage = (result: useFormValidatorFunctionReturn, key: keyof T, validator: useFormValidatorMethod | useFormValidatorObject) =>
+    result === true ? undefined : result.constructor.name === 'String' ? result : isFormValidatorObject(validator) && validator.message ? validator.message : defaultErrorMessage(key)
+
   const _validate = (key: keyof T, value: any) => {
     const validator: useFormValidatorParameter | undefined = validators[key]
     if (!validator) return
 
     if (Array.isArray(validator)) {
-      Promise.all(validator.map(v => _validateAll(value, v))).then(result => {
-        const index = result.indexOf(false)
+      Promise.all(validator.map(v => _validateAll(value, v))).then(results => {
+        const i = results.findIndex(result => result !== true)
         setErrors({
           ...errors,
-          [key]:
-            index === -1
-              ? undefined
-              : isFormValidatorObject(validator[index]) && (validator[index] as useFormValidatorObject).message
-              ? (validator[index] as useFormValidatorObject).message
-              : defaultErrorMessage(key),
+          [key]: i === -1 ? undefined : _getErrorMessage(results[i], key, validator[i]),
         })
       })
     } else {
-      _validateAll(value, validator).then(valid => {
+      _validateAll(value, validator).then(result => {
         setErrors({
           ...errors,
-          [key]: valid ? undefined : isFormValidatorObject(validator) && validator.message ? validator.message : defaultErrorMessage(key),
+          [key]: _getErrorMessage(result, key, validator),
         })
       })
     }
