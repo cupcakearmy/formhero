@@ -13,7 +13,7 @@ const initial = {
 }
 
 const Index: React.FC = () => {
-  const { field, form, errors, isValid, setForm, setErrors } = useForm(initial, {
+  const { field, form, errors, isValid, setForm, setErrors, setField } = useForm(initial, {
     username: [
       /^test/,
       {
@@ -37,6 +37,7 @@ const Index: React.FC = () => {
 
   const reset = () => {
     setForm(initial)
+    setField('username', 'asdf')
   }
 
   const error = () => {
