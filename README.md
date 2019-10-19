@@ -383,3 +383,7 @@ const resetForm = () => {
   })
 }
 ```
+
+### Thanks & Attributions
+
+- Thanks for [brendanmckenzie](https://github.com/brendanmckenzie) for suggesting to change `auto` to `field`.
