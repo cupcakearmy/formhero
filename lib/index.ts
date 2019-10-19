@@ -29,7 +29,11 @@ function isFormValidatorObject(validator: useFormValidatorMethod | useFormValida
 
 const defaultErrorMessage = (key: any) => `Error in ${key}`
 
-export const useForm = <T, U extends { [key in keyof T]: useFormValidatorParameter }, E extends { [key in keyof U]?: string }>(init: T, validators: Partial<U> = {}, options: useFormOptions = {}) => {
+export const useForm = <T extends object, U extends { [key in keyof T]: useFormValidatorParameter }, E extends { [key in keyof U]?: string }>(
+  init: T,
+  validators: Partial<U> = {},
+  options: useFormOptions = {}
+) => {
   const [form, setForm] = useState<T>(init)
 
   const [errors, setErrors] = useState<Partial<E>>({})
@@ -39,7 +43,7 @@ export const useForm = <T, U extends { [key in keyof T]: useFormValidatorParamet
     setIsValid(!Object.values(errors).reduce((acc, cur) => acc || cur !== undefined, false))
   }, [errors])
 
-  const _set = (key: keyof T, value: any) => {
+  const _set = <A extends keyof T>(key: A, value: T[A]) => {
     setForm({
       ...form,
       [key]: value,
@@ -82,7 +86,7 @@ export const useForm = <T, U extends { [key in keyof T]: useFormValidatorParamet
     }
   }
 
-  const update = (key: keyof T, extractor = options.extractor) => (value: any) => {
+  const update = <A extends keyof T>(key: A, extractor = options.extractor) => (value: T[A]) => {
     const extracted = extractor ? extractor(value) : HTMLInputExtractor(value)
     _set(key, extracted)
     _validate(key, extracted)
@@ -93,5 +97,5 @@ export const useForm = <T, U extends { [key in keyof T]: useFormValidatorParamet
     [opts.setter || options.setter || 'value']: form[key] as any,
   })
 
-  return { form, update, field, errors, isValid, setForm, setErrors }
+  return { form, update, field, errors, isValid, setForm, setErrors, setField: _set }
 }
