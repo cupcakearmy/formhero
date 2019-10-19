@@ -188,7 +188,9 @@ const initial = {
 
 ### Validators
 
-A validator is an object that taked in either a `RegExp` or a `Function` (can be async). Optionally you can pass a message string that will be displayed instead of the default one.
+A validator is an object that taked in either a `RegExp` or a `Function` (can be async) or an array of those. Optionally you can pass a message string that will be displayed instead of the default one.
+
+A validator functions takes the current value as input and should return a `boolean` or a `string`. If returned `true` the input counts as valid, if `false` it's not. If you pass a string formhero will treat it as not valid and display the string returned as error message.
 
 ###### Example: Regular Expression
 
@@ -235,6 +237,17 @@ const validators = {
       message: 'Some other error',
     },
   ],
+}
+```
+
+###### Example: Dynamic Error Message
+
+```javascript
+const validators = {
+  username: async (s: string) => {
+    const taken = await API.isUsernameTaken(s)
+    return taken ? 'Username is taken': true
+  }
 }
 ```
 
