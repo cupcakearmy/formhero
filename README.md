@@ -39,7 +39,9 @@ npm i formhero
     - [form](#form)
     - [errors](#errors)
     - [isValid](#isvalid)
-    - [update](#update)
+    - [setField](#setfield)
+    - [setForm](#setform)
+    - [setErrors](#seterrors)
 
 ## 🤔 Motivation
 
@@ -360,27 +362,48 @@ const { errors } = useForm(...)
 
 `isValid` is a little simple helper that checks whether the `error` object is clear or if there are errors left.
 
-## Update
+## setField
 
-The `update` function allows you to manually change and assign the state of the form. This can be usefull when you want to reset a field or the whole form. The input must have the same type as the initial state.
+The `setField` function allows you to manually change and assign the state of a field. The type of the field must be the same as the initial type given in the constructor.
 
 ###### Example
 
 ```javascript
-const { form, update } = useForm(...)
+const { form, setField } = useForm(...)
 
 const resetUsername = () => {
-  update({
-    ...form,
-    username: '',
-  })
+  setField('username', 'new value')
 }
+```
+
+## setForm
+
+The `setForm` function allows you to manually change and assign the state of the form. This can be usefull when you want to reset a field or the whole form. The input must have the same type as the initial state.
+
+###### Example
+
+```javascript
+const initial = {username: '', password: ''}
+
+const { form, setForm } = useForm(initial, ...)
 
 const resetForm = () => {
-  update({
-    username: '',
-    password: '',
-  })
+  setForm(initial)
+}
+```
+
+## setErrors
+
+The `setErrors` function allows you to manually change and assign the state of the errors. This can be usefull when you want to set an error manually (e.g. sent from the server).
+
+###### Example
+
+```javascript
+
+const { form, setErrors } = useForm(...)
+
+const setError = () => {
+  setErrors({username: 'Already taken'})
 }
 ```
 
