@@ -22,9 +22,9 @@ npm i formhero
 
 ### 👁 Demos
 
-- [__*Live Web*__](https://cupcakearmy.github.io/formhero/)
-- [__*Live Codesandbox*__](https://codesandbox.io/embed/formhero-simple-bdcx2?expanddevtools=1&fontsize=14)
-- [__*Live React-Native*__](https://snack.expo.io/@cupcakearmy/useform)
+- [**_Live Web_**](https://cupcakearmy.github.io/formhero/)
+- [**_Live Codesandbox_**](https://codesandbox.io/embed/formhero-simple-bdcx2?expanddevtools=1&fontsize=14)
+- [**_Live React-Native_**](https://snack.expo.io/@cupcakearmy/useform)
 
 ### Links
 
@@ -35,7 +35,7 @@ npm i formhero
     - [Validators](#validators)
     - [Options](#options)
   - Returns
-    - [auto](#auto)
+    - [field](#field)
     - [form](#form)
     - [errors](#errors)
     - [isValid](#isvalid)
@@ -43,7 +43,7 @@ npm i formhero
 
 ## 🤔 Motivation
 
-So why write yet another form utility you might ask? First off, I don't like the Formik approach. In my humble opition formik is very verbose and requires lots of boilerplate. Also does not work with hooks. [react-hook-form](https://react-hook-form.com/) is a very cool library and it is the main inspiration for formhero. It does almost everything right... typescript, no deps, small, concise. 
+So why write yet another form utility you might ask? First off, I don't like the Formik approach. In my humble opition formik is very verbose and requires lots of boilerplate. Also does not work with hooks. [react-hook-form](https://react-hook-form.com/) is a very cool library and it is the main inspiration for formhero. It does almost everything right... typescript, no deps, small, concise.
 
 The problem that I found while using it was that 3rd party ui libs like [Ant Design](https://ant.design/) or [Fabric UI](https://developer.microsoft.com/en-us/fabric#/controls/web) do not always have the standart `onChange` or `value` props in their components. That is where react-hook-form starts falling apart. This is what formhero tries to address in the most minimalistic way possible, with as little code as needed. All in pure typescript and no deps.
 
@@ -54,8 +54,7 @@ import ReactDOM from 'react-dom'
 import { useForm } from 'formhero'
 
 const Form = () => {
-
-  const { auto, form } = useForm({
+  const { field, form } = useForm({
     username: '',
     password: '',
   })
@@ -68,9 +67,8 @@ const Form = () => {
   return (
     <div>
       <form onSubmit={_submit}>
-        
-        <input {...auto('username')} />
-        <input {...auto('password')} />
+        <input {...field('username')} />
+        <input {...field('password')} />
 
         <button type="submit">Go 🚀</button>
       </form>
@@ -85,43 +83,43 @@ const Form = () => {
 
 ```typescript
 const Form = () => {
-
-  const { auto, form, errors } = useForm({
-    username: '',
-    email: '',
-    password: ''
-  }, {
-    username: value => value.length > 3,
-    email: {
-      validator: /@/,
-      message: 'Must contain an @',
+  const { field, form, errors } = useForm(
+    {
+      username: '',
+      email: '',
+      password: '',
     },
-    password: [
-      {
-        validator: /[A-Z]/,
-        message: 'Must contain an uppercase letter'
+    {
+      username: value => value.length > 3,
+      email: {
+        validator: /@/,
+        message: 'Must contain an @',
       },
-      {
-        validator: /[\d]/,
-        message: 'Must contain a digit'
-      },
-    ]
-  })
+      password: [
+        {
+          validator: /[A-Z]/,
+          message: 'Must contain an uppercase letter',
+        },
+        {
+          validator: /[\d]/,
+          message: 'Must contain a digit',
+        },
+      ],
+    }
+  )
 
   return (
     <form>
-
       <h1>Errors & Validation</h1>
 
-      <input {...auto('username')} placeholder="Username" />
+      <input {...field('username')} placeholder="Username" />
       {errors.username && 'Must be longer than 3'}
 
-      <input {...auto('email')} placeholder="EMail" />
+      <input {...field('email')} placeholder="EMail" />
       {errors.email}
 
-      <input {...auto('password')} placeholder="Password" type="password" />
+      <input {...field('password')} placeholder="Password" type="password" />
       {errors.password}
-
     </form>
   )
 }
@@ -133,30 +131,32 @@ Often it happens that you use a specific input or framework, so the default gett
 
 ```typescript
 const Form = () => {
-
-  const { auto, form, errors } = useForm({
+  const { field, form, errors } = useForm({
     awesome: true,
   })
 
   return (
-    <form onSubmit={e => {
-      e.preventDefault()
-      console.log(form)
-    }}>
-
+    <form
+      onSubmit={e => {
+        e.preventDefault()
+        console.log(form)
+      }}
+    >
       <h1>Custom</h1>
 
       <label>
-        <input type="checkbox" {...auto('awesome', {
-          setter: 'checked',
-          getter: 'onChange',
-          extractor: (e) => e.target.checked
-        })} />
+        <input
+          type="checkbox"
+          {...field('awesome', {
+            setter: 'checked',
+            getter: 'onChange',
+            extractor: e => e.target.checked,
+          })}
+        />
         Is it awesome?
-          </label>
+      </label>
 
       <input type="submit" />
-
     </form>
   )
 }
@@ -167,7 +167,7 @@ const Form = () => {
 ### `useForm`
 
 ```typescript
-const {auto, errors, update, form, isValid} = useForm(initial, validators, options)
+const { field, errors, update, form, isValid } = useForm(initial, validators, options)
 ```
 
 ### Initial
@@ -192,7 +192,7 @@ A validator is an object that taked in either a `RegExp` or a `Function` (can be
 
 ```javascript
 const validators = {
-  // Only contains letters. 
+  // Only contains letters.
   // This could also be a (also async) function that returns a boolean.
   username: /^[A-z]*$/,
 }
@@ -213,7 +213,7 @@ const validators = {
   username: {
     validator: /^[A-z]*$/,
     message: 'My custom error message',
-  }
+  },
 }
 ```
 
@@ -227,12 +227,12 @@ const validators = {
       message: 'My custom error message',
     },
     /[\d]/,
-    async (value) => value.length > 0,
+    async value => value.length > 0,
     {
-      validator: (value) => true,
+      validator: value => true,
       message: 'Some other error',
-    }
-  ]
+    },
+  ],
 }
 ```
 
@@ -245,33 +245,30 @@ Sometimes it's practical to have some different default values when using for ex
 [Check the Expo Snack for a live preview](https://snack.expo.io/@cupcakearmy/useform)
 
 ```javascript
-import * as React from 'react';
-import { Text, SafeAreaView, TextInput } from 'react-native';
-import { useForm } from 'formhero';
+import * as React from 'react'
+import { Text, SafeAreaView, TextInput } from 'react-native'
+import { useForm } from 'formhero'
 
 const initial = {
   username: 'i am all lowercase',
-};
-const validators = {};
+}
+const validators = {}
 const options = {
   setter: 'value', // This is not stricly necessarry as 'value' would already be the default.
   getter: 'onChangeText',
   extractor: text => text.toLowerCase(),
-};
+}
 
 export default () => {
-  const { form, auto } = useForm(initial, validators, options);
+  const { form, field } = useForm(initial, validators, options)
 
   return (
     <SafeAreaView>
-      <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 2 }}
-        {...auto('username')}
-      />
+      <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 2 }} {...field('username')} />
       <Text>{form.username}</Text>
     </SafeAreaView>
-  );
-};
+  )
+}
 ```
 
 ###### Example: React Native (Method 2 - Local overwrite)
@@ -280,15 +277,15 @@ export default () => {
 // ...
 
 export default () => {
-  const { form, auto } = useForm({
+  const { form, field } = useForm({
     username: 'i am all lowercase',
-  });
+  })
 
   return (
     <SafeAreaView>
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 2 }}
-        {...auto('username', {
+        {...field('username', {
           setter: 'value', // This is not stricly necessarry as 'value' would already be the default.
           getter: 'onChangeText',
           extractor: text => text.toLowerCase(),
@@ -296,44 +293,41 @@ export default () => {
       />
       <Text>{form.username}</Text>
     </SafeAreaView>
-  );
-};
-
+  )
+}
 ```
 
-### Auto
+### field
 
-The `auto` object is used to bind the form state to the input.
-
+The `field` object is used to bind the form state to the input.
 
 ###### Example: Simple
 
 ```javascript
-const { auto } = useForm()
+const { field } = useForm()
 
-<input {...auto('username')} />
+<input {...field('username')} />
 ```
-
 
 ###### Example: With custom options
 
 All are optional.
 
 ```javascript
-const { auto } = useForm()
+const { field } = useForm()
 
-<input {...auto('username', {
+<input {...field('username', {
   getter: 'onChage',
   setter: 'value',
   extractor: (e) => e.target.value
 })} />
 ```
 
-## Form 
+## Form
 
 This is the form state that you can use when submitting the data
 
-###### Example 
+###### Example
 
 ```javascript
 

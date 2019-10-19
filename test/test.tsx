@@ -6,7 +6,7 @@ import { useForm } from '../'
 const TextError: React.FC<{ error?: string }> = ({ error }) => (!error ? null : <div className="has-text-danger">{error}</div>)
 
 const Index: React.FC = () => {
-  const { auto, form, errors, isValid } = useForm(
+  const { field, form, errors, isValid } = useForm(
     {
       username: '',
       password: '',
@@ -40,20 +40,20 @@ const Index: React.FC = () => {
     <div>
       <form onSubmit={_submit}>
         <div>Username</div>
-        <input className="input" {...auto('username')} />
+        <input className="input" {...field('username')} />
         <TextError error={errors.username} />
         <br />
         <br />
 
         <div>Password</div>
-        <input className="input" {...auto('password')} />
+        <input className="input" {...field('password')} />
         <TextError error={errors.password} />
         <br />
         <br />
 
         <div>Which one to choose?</div>
         <div className="select">
-          <select {...auto('type')}>
+          <select {...field('type')}>
             <option value="redux-form">Redux-Form</option>
             <option value="react-hook-forms">React-Hook-Forms</option>
             <option value="formik">Formik</option>
@@ -66,7 +66,7 @@ const Index: React.FC = () => {
         <label className="checkbox">
           <input
             type="checkbox"
-            {...auto('awesome', {
+            {...field('awesome', {
               setter: 'checked',
               getter: 'onChange',
               extractor: e => e.target.checked,

@@ -88,10 +88,10 @@ export const useForm = <T, U extends { [key in keyof T]: useFormValidatorParamet
     _validate(key, extracted)
   }
 
-  const auto = (key: keyof T, opts: useFormOptions = {}) => ({
+  const field = (key: keyof T, opts: useFormOptions = {}) => ({
     [opts.getter || options.getter || 'onChange']: update(key, opts.extractor),
     [opts.setter || options.setter || 'value']: form[key] as any,
   })
 
-  return { form, update, auto, errors, isValid }
+  return { form, update, field, errors, isValid }
 }
