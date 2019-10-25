@@ -29,6 +29,9 @@ npm i formhero
 ### Links
 
 - [Examples](#-examples-more-here)
+  - [Validation](#validation)
+  - [Easy Customization](#easy-customization)
+  - [Dynamic Fields](#dynamic-fields)
 - [Docs](#-documentation)
   - Contructor
     - [Initial State](#initial)
