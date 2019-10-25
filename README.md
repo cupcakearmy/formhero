@@ -164,6 +164,35 @@ const Form = () => {
 }
 ```
 
+### Dynamic Fields
+
+Sometimes you don't know all the fields upfront. You can simply define a generic type and assign it to the initial object. Of course type assistance is limited in this case as formhero cannot be sure what keys are valid.
+
+```typescript
+import React from "react";
+import ReactDOM from "react-dom";
+import { useForm } from "formhero";
+
+type MyForm = { [field: string]: string | number };
+
+const init: MyForm = {
+  username: "unicorn",
+  password: ""
+};
+
+const Form: React.FC = () => {
+  const { field, form, errors } = useForm(init);
+
+  return (
+    <form>
+      <input {...field("username")} placeholder="Username" />
+      <input {...field("someother")} placeholder="Something else" />
+      <input {...field("password")} placeholder="Password" type="password" />
+    </form>
+  );
+};
+```
+
 ## 📖 Documentation
 
 ### `useForm`
