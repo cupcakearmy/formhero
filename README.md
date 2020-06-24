@@ -26,7 +26,7 @@ npm i formhero
 - [**_Live Codesandbox_**](https://codesandbox.io/embed/formhero-simple-bdcx2?expanddevtools=1&fontsize=14)
 - [**_Live React-Native_**](https://snack.expo.io/@cupcakearmy/useform)
 
-### Links
+### 📖 Docs
 
 - [Examples](#-examples-more-here)
   - [Validation](#validation)
@@ -46,7 +46,7 @@ npm i formhero
     - [setForm](#setform)
     - [setErrors](#seterrors)
 
-## 🤔 Motivation
+## 🤔 Motivation & Why
 
 So why write yet another form utility you might ask? First off, I don't like the Formik approach. In my humble opition formik is very verbose and requires lots of boilerplate. Also does not work with hooks. [react-hook-form](https://react-hook-form.com/) is a very cool library and it is the main inspiration for formhero. It does almost everything right... typescript, no deps, small, concise.
 
