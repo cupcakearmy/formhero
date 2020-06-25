@@ -13,13 +13,14 @@
 - **0** Dependencies
 - Tiny **~0.7kB**
 - React Hooks
-- Requires at least typescript **3.5** if used with typescript.
 
 ###### Installation
 
 ```
 npm i formhero
 ```
+
+*Note:* Requires at least typescript version `3.5`, otherwise the error object will not have the right inherited types.
 
 ### 👁 Demos
 
