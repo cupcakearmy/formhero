@@ -13,6 +13,7 @@
 - **0** Dependencies
 - Tiny **~0.7kB**
 - React Hooks
+- Requires at least typescript **3.5** if used with typescript.
 
 ###### Installation
 
