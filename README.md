@@ -3,6 +3,7 @@
 ![Version](https://badgen.net/npm/v/formhero)
 ![Types](https://badgen.net/npm/types/formhero)
 ![Size Badge](https://badgen.net/bundlephobia/minzip/formhero)
+![Weekly NPM Downloads](https://img.shields.io/npm/dm/formhero)
 
 **Fully customisable react form utility.**
 
