@@ -1,9 +1,10 @@
 ![Logo](https://raw.githubusercontent.com/cupcakearmy/formhero/master/.github/Logo.jpg)
 
-![Version](https://badgen.net/npm/v/formhero)
-![Types](https://badgen.net/npm/types/formhero)
-![Size Badge](https://badgen.net/bundlephobia/minzip/formhero)
-![Weekly NPM Downloads](https://img.shields.io/npm/dm/formhero)
+![dependencies](https://badgen.net/david/dep/cupcakearmy/formhero)
+![downloads badge](https://badgen.net/npm/dt/formhero)
+![types badge](https://badgen.net/npm/types/formhero)
+![version badge](https://badgen.net/npm/v/formhero)
+![minzip size badge](https://badgen.net/bundlephobia/minzip/formhero)
 
 **Fully customisable react form utility.**
 
