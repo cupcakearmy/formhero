@@ -6,8 +6,7 @@
     "jsx": "react",
     "outDir": "./dist",
     "declaration": true,
-    "strict": true,
-    "allowSyntheticDefaultImports": true
+    "strict": true
   },
   "include": ["./lib"]
 }

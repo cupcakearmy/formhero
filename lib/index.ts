@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 export type FieldOptions<G extends string = 'onChange', S extends string = 'value'> = {
   extractor?: useFormExtractor
