@@ -1,25 +1,13 @@
 {
-	"compilerOptions": {
-		"target": "es2017",
-		"module": "commonjs",
-		"jsx": "react",
-		"outDir": "./dist",
-		"declaration": true,
-		"strict": true,
-		"noImplicitAny": true,
-		"strictNullChecks": true,
-		"strictFunctionTypes": true,
-		"strictBindCallApply": true,
-		"strictPropertyInitialization": true,
-		"noImplicitThis": true,
-		"alwaysStrict": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
-		"esModuleInterop": true,
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true
-	},
-	"include": [
-		"./lib"
-	]
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "outDir": "./dist",
+    "declaration": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["./lib"]
 }

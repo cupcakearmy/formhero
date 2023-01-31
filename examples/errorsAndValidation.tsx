@@ -1,7 +1,7 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import { useForm } from '../'
+import { mount } from './common'
 
 const Index: React.FC = () => {
   const { field, form, errors, isValid } = useForm(
@@ -11,27 +11,29 @@ const Index: React.FC = () => {
       password: '',
     },
     {
-      username: value => value.length > 3,
-      email: {
-        validator: /@/,
-        message: 'Must contain an @',
+      rules: {
+        username: (value) => value.length > 3,
+        email: {
+          rule: /@/,
+          message: 'Must contain an @',
+        },
+        password: [
+          {
+            rule: /[A-Z]/,
+            message: 'Must contain an uppercase letter',
+          },
+          {
+            rule: /[\d]/,
+            message: 'Must contain a digit',
+          },
+        ],
       },
-      password: [
-        {
-          validator: /[A-Z]/,
-          message: 'Must contain an uppercase letter',
-        },
-        {
-          validator: /[\d]/,
-          message: 'Must contain a digit',
-        },
-      ],
     }
   )
 
   return (
     <form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault()
         if (isValid) console.log(form)
       }}
@@ -52,4 +54,4 @@ const Index: React.FC = () => {
   )
 }
 
-ReactDOM.render(<Index />, document.getElementById('errors'))
+mount(Index)

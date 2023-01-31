@@ -1,100 +1,95 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+
+export type FieldOptions<G extends string = 'onChange', S extends string = 'value'> = {
+  extractor?: useFormExtractor
+  getter: G
+  setter: S
+}
+
+type RuleFunctionReturn = boolean | string
+type RuleFunction<I> = (value: I) => RuleFunctionReturn | Promise<RuleFunctionReturn>
+type Rule<I> = RuleFunction<I> | RegExp
+type RuleObject<I> = Rule<I> | { rule: Rule<I>; message: string }
+type RuleSet<I> = RuleObject<I> | RuleObject<I>[]
+
+function isSimpleRule<I>(obj: RuleObject<I>): obj is Rule<I> {
+  return obj instanceof RegExp || typeof obj === 'function'
+}
 
 export type useFormExtractor = (from: any) => any
-
-export type useFormOptions = {
-  extractor?: useFormExtractor
-  getter?: string
-  setter?: string
-}
-
-export type useFormValidatorFunctionReturn = boolean | string
-export type useFormValidatorFunction = (s: any) => useFormValidatorFunctionReturn | Promise<useFormValidatorFunctionReturn>
-export type useFormValidatorMethod = useFormValidatorFunction | RegExp
-
-export type useFormValidatorObject = {
-  validator: useFormValidatorMethod
-  message?: string
-}
-
-export type useFormValidator = useFormValidatorMethod | useFormValidatorObject
-
-export type useFormValidatorParameter = useFormValidator | useFormValidator[]
-
 export const HTMLInputExtractor: useFormExtractor = (e: React.FormEvent<HTMLInputElement>) => e.currentTarget.value
 export const HTMLCheckboxExtractor: useFormExtractor = (e: React.FormEvent<HTMLInputElement>) => e.currentTarget.checked
 
-function isFormValidatorObject(validator: useFormValidatorMethod | useFormValidatorObject): validator is useFormValidatorObject {
-  return validator.constructor.name === 'Object'
+export type FormOptions<R> = {
+  rules: R
+  // fields: FieldOptions
 }
 
-const defaultErrorMessage = (key: any) => `Error in ${key}`
+// Form = Type of form
+// R = Rules, derived from F
+// E = Errors, derived from F
+export const useForm = <Form extends object, R extends { [K in keyof Form]?: RuleSet<Form[K]> }, E extends { [key in keyof R]?: RuleFunctionReturn }>(init: Form, options?: FormOptions<R>) => {
+  const validators: R = options?.rules ?? ({} as R)
 
-export const useForm = <T extends object, U extends { [key in keyof T]: useFormValidatorParameter }, E extends { [key in keyof U]?: string }>(
-  init: T,
-  validators: Partial<U> = {},
-  options: useFormOptions = {}
-) => {
-  const [form, setForm] = useState<T>(init)
-
-  const [errors, setErrors] = useState<Partial<E>>({})
-  const [isValid, setIsValid] = useState(true)
+  const [form, setForm] = useState<Form>(init)
+  const [errors, setErrors] = useState<E>({} as E)
+  const [isValid, setIsValid] = useState<boolean>(true)
 
   useEffect(() => {
     setIsValid(!Object.values(errors).reduce((acc, cur) => acc || cur !== undefined, false))
   }, [errors])
 
-  const _set = <A extends keyof T>(key: A, value: T[A]) => {
+  const setField = <A extends keyof Form>(key: A, value: Form[A]) => {
     setForm({
       ...form,
       [key]: value,
     })
   }
 
-  const _validateAll = async (value: any, object: useFormValidator): Promise<useFormValidatorFunctionReturn> => {
-    const validator = isFormValidatorObject(object) ? object.validator : object
-
-    if (validator.constructor.name === 'Function') return (validator as useFormValidatorFunction)(value)
-    else if (validator.constructor.name === 'AsyncFunction') return await (validator as useFormValidatorFunction)(value)
-    else if (validator.constructor.name === 'RegExp') return (validator as RegExp).test(value)
-    else return false
+  async function applyRule<I>(value: any, rule: Rule<I>): Promise<RuleFunctionReturn> {
+    if (typeof rule === 'function') return await rule(value)
+    if (rule instanceof RegExp) return rule.test(value)
+    throw new Error(`Unsupported validator: ${rule}`)
   }
 
-  const _getErrorMessage = (result: useFormValidatorFunctionReturn, key: keyof T, validator: useFormValidatorMethod | useFormValidatorObject) =>
-    result === true ? undefined : result.constructor.name === 'String' ? result : isFormValidatorObject(validator) && validator.message ? validator.message : defaultErrorMessage(key)
+  async function validate<K extends keyof Form>(key: K, value: Form[K]) {
+    const set: RuleSet<Form[K]> | undefined = validators[key] as any
+    if (!set) return
 
-  const _validate = (key: keyof T, value: any) => {
-    const validator: useFormValidatorParameter | undefined = validators[key]
-    if (!validator) return
+    const rules = Array.isArray(set) ? set : [set]
+    let newValue = undefined
+    for (const rule of rules) {
+      const simple = isSimpleRule(rule)
+      const fn = simple ? rule : rule.rule
+      const result = await applyRule(value, fn)
+      if (result !== true) {
+        newValue = simple ? (typeof result === 'string' ? result : true) : rule.message
+        break
+      }
+    }
+    setErrors({
+      ...errors,
+      [key]: newValue,
+    })
+  }
 
-    if (Array.isArray(validator)) {
-      Promise.all(validator.map(v => _validateAll(value, v))).then(results => {
-        const i = results.findIndex(result => result !== true)
-        setErrors({
-          ...errors,
-          [key]: i === -1 ? undefined : _getErrorMessage(results[i], key, validator[i]),
-        })
-      })
-    } else {
-      _validateAll(value, validator).then(result => {
-        setErrors({
-          ...errors,
-          [key]: _getErrorMessage(result, key, validator),
-        })
-      })
+  function update<A extends keyof Form, RAW = any>(key: A, extractor?: (e: RAW) => Form[A]) {
+    return (value: RAW) => {
+      const extracted = extractor ? extractor(value) : HTMLInputExtractor(value)
+      setField(key, extracted)
+      validate(key, extracted)
     }
   }
 
-  const update = <A extends keyof T>(key: A, extractor = options.extractor) => (value: T[A]) => {
-    const extracted = extractor ? extractor(value) : HTMLInputExtractor(value)
-    _set(key, extracted)
-    _validate(key, extracted)
+  type FieldReturn<K extends keyof Form, G extends string, S extends string> = { [getter in G]: ReturnType<typeof update<K>> } & { [setter in S]: Form[K] }
+  function field<K extends keyof Form>(key: K): FieldReturn<K, 'onChange', 'value'>
+  function field<K extends keyof Form, G extends string, S extends string>(key: K, opts: FieldOptions<G, S>): FieldReturn<K, G, S>
+  function field<K extends keyof Form, G extends string, S extends string>(key: K, opts?: FieldOptions<G, S>): FieldReturn<K, G, S> {
+    return {
+      [opts?.getter || 'onChange']: update<K>(key, opts?.extractor),
+      [opts?.setter || 'value']: form[key],
+    } as FieldReturn<K, G, S>
   }
 
-  const field = (key: keyof T, opts: useFormOptions = {}) => ({
-    [opts.getter || options.getter || 'onChange']: update(key, opts.extractor),
-    [opts.setter || options.setter || 'value']: form[key] as any,
-  })
-
-  return { form, update, field, errors, isValid, setForm, setErrors, setField: _set }
+  return { form, field, errors, isValid, setForm, setErrors, setField }
 }

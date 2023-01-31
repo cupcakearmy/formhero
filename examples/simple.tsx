@@ -1,17 +1,17 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import { useForm } from '../dist'
+import { mount } from './common'
 
 const Index: React.FC = () => {
-  const { field, form, errors } = useForm({
+  const { field, form } = useForm({
     username: 'unicorn',
     password: '',
   })
 
   return (
     <form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault()
         console.log(form)
       }}
@@ -26,4 +26,4 @@ const Index: React.FC = () => {
   )
 }
 
-ReactDOM.render(<Index />, document.getElementById('simple'))
+mount(Index)
