@@ -2,5 +2,6 @@
 node_modules
 
 # Generated
+docs
 dist
 coverage
