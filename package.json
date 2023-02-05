@@ -1,19 +1,20 @@
 {
   "name": "formhero",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "type": "module",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./dist",
     "prepublishOnly": "run-s clean build test",
-    "build": "tsc",
-    "build:watch": "tsc -w",
-    "demo": "vite build",
+    "build": "run-s compile demo",
+    "compile": "tsc",
+    "compile:watch": "tsc -w",
+    "demo": "vite build --emptyOutDir",
     "demo:watch": "vite",
     "test": "vitest --coverage --run",
     "test:watch": "vitest --coverage",
-    "dev": "run-p build:watch demo:watch test:watch"
+    "dev": "run-p compile:watch demo:watch test:watch"
   },
   "peerDependencies": {
     "react": ">=16"
@@ -22,14 +23,14 @@
     "@testing-library/react": "^13.4.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react": "^3.0.1",
-    "@vitest/coverage-c8": "^0.28.2",
-    "happy-dom": "^8.1.5",
+    "@vitejs/plugin-react": "^3.1.0",
+    "@vitest/coverage-c8": "^0.28.4",
+    "happy-dom": "^8.2.6",
     "npm-run-all": "^4.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^4.9.4",
-    "vite": "^4.0.4",
-    "vitest": "^0.28.2"
+    "typescript": "^4.9.5",
+    "vite": "^4.1.1",
+    "vitest": "^0.28.4"
   }
 }
