@@ -10,7 +10,7 @@
     "build": "run-s compile demo",
     "compile": "tsc",
     "compile:watch": "tsc -w",
-    "demo": "vite build --emptyOutDir",
+    "demo": "vite build --emptyOutDir --base=./",
     "demo:watch": "vite",
     "test": "vitest --coverage --run",
     "test:watch": "vitest --coverage",
