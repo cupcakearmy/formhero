@@ -1,8 +1,6 @@
 name: "Build"
 description: "Build the project."
 
-inputs:
-
 runs:
   using: "composite" # This is the magic
   steps:
