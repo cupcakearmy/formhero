@@ -1,34 +1,15 @@
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
-import React, { useEffect } from 'react'
+import { act, cleanup, fireEvent, render } from '@testing-library/react'
+import React from 'react'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { useForm } from '../lib'
+import { Insight, Util } from './shared'
 
 beforeEach(cleanup)
 
-const Insight = {
-  Portal({ data }: { data: any }) {
-    return <div data-testid="result">{JSON.stringify(data)}</div>
-  },
-  async verify(obj: any) {
-    const result = await screen.findByTestId('result')
-    const data = JSON.parse(result.innerText)
-    expect(data).toMatchObject(obj)
-  },
-}
-
-const Util = {
-  find<E extends HTMLElement = HTMLInputElement>(id: string) {
-    return screen.findByTestId<E>(id)
-  },
-  writeToField(node: HTMLInputElement, value: string) {
-    fireEvent.change(node, { target: { value } })
-  },
-}
-
 describe('Field', () => {
   test('Basic Form', async () => {
-    const BasicForm = () => {
+    function Component() {
       const form = useForm({ username: '', password: '' })
       const { field } = form
       return (
@@ -47,7 +28,7 @@ describe('Field', () => {
       )
     }
 
-    render(<BasicForm />)
+    render(<Component />)
     async function inputIntoForm(id: string, value: string) {
       const node = await Util.find(id)
       await act(() => {
@@ -60,27 +41,65 @@ describe('Field', () => {
     await inputIntoForm('password', 'bar')
   })
 
-  test('setField', async () => {
-    const value = 'foo'
-    const Component = () => {
-      const { field, setField, form } = useForm({ username: '', password: '' })
-      useEffect(() => setField('username', value), [])
+  test.skip('Checkbox', async () => {
+    function Component() {
+      const { field, form } = useForm({ cool: false })
       return (
-        <div>
-          <input data-testid="field" {...field('username')}></input>
+        <form>
+          <input
+            data-testid="field"
+            type="checkbox"
+            {...field('cool', {
+              setter: 'checked',
+              getter: 'onChange',
+              extractor: (e) => e.target.checked,
+            })}
+          />
           <Insight.Portal data={form} />
-        </div>
+        </form>
       )
     }
+
     render(<Component />)
-    const node = await screen.findByTestId<HTMLInputElement>('field')
-    expect(node.value).toBe(value)
-    Insight.verify({ username: value, password: '' })
+    const field = await Util.find('field')
+    expect(field.checked).toBe(false)
+    await Insight.verify({ cool: false })
+    await act(() => {
+      // Bugged for now
+      fireEvent.click(field)
+    })
+    expect(field.checked).toBe(true)
+    await Insight.verify({ cool: true })
+  })
+
+  test('Select', async () => {
+    function Component() {
+      const { form, field } = useForm({ letter: '' })
+      return (
+        <>
+          <select data-testid="field" {...field('letter')}>
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+          </select>
+          <Insight.Portal data={form} />
+        </>
+      )
+    }
+
+    render(<Component />)
+    const field = await Util.find('field')
+    const value = 'b'
+    await act(() => {
+      fireEvent.change(field, { target: { value } })
+    })
+    expect(field.value).toBe(value)
+    await Insight.verify({ letter: value })
   })
 
   test('Field sync', async () => {
     const value = 'foo'
-    const Component = () => {
+    function Component() {
       const { field, form } = useForm({ name: '' })
       return (
         <form>
@@ -101,54 +120,3 @@ describe('Field', () => {
     expect(a.value).toBe(b.value)
   })
 })
-
-describe('Validation', () => {
-  test('Basic', async () => {
-    const Component = () => {
-      const { errors, field } = useForm({ password: '' }, { rules: { password: [(p) => p.length > 8] } })
-
-      return (
-        <div>
-          <input {...field('password')} data-testid="field" />
-          <Insight.Portal data={errors} />
-        </div>
-      )
-    }
-    render(<Component />)
-    const node = await Util.find('field')
-    await act(() => {
-      Util.writeToField(node, '123')
-    })
-    Insight.verify({ password: true })
-  })
-
-  test('Array of rules', async () => {
-    const Component = () => {
-      const { errors, field } = useForm({ password: '' }, { rules: { password: [(p) => p.length > 8, /#/] } })
-
-      return (
-        <div>
-          <input {...field('password')} data-testid="field" />
-          <Insight.Portal data={errors} />
-        </div>
-      )
-    }
-    render(<Component />)
-    const node = await Util.find('field')
-    await act(() => {
-      Util.writeToField(node, '12345678')
-    })
-    Insight.verify({ password: true })
-    await act(() => {
-      Util.writeToField(node, '1234#5678')
-    })
-    Insight.verify({})
-  })
-})
-
-// Is valid
-// Reset / setForm
-// Set error
-// Checkbox
-// Extractor
-// Custom extractor

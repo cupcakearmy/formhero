@@ -1,60 +1,62 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 
-export type FieldOptions<G extends string = 'onChange', S extends string = 'value'> = {
-  extractor?: useFormExtractor
-  getter: G
-  setter: S
+// Possible future ideas
+// TODO: Scroll to error field
+// TODO: Focus on error field
+
+export type FieldOptions<G extends string = 'onChange', S extends string = 'value', T = any> = {
+  extractor?: useFormExtractor<T> | null
+  getter?: G
+  setter?: S
 }
 
 type RuleFunctionReturn = boolean | string
-type RuleFunction<I> = (value: I) => RuleFunctionReturn | Promise<RuleFunctionReturn>
-type Rule<I> = RuleFunction<I> | RegExp
-type RuleObject<I> = Rule<I> | { rule: Rule<I>; message: string }
-type RuleSet<I> = RuleObject<I> | RuleObject<I>[]
+type RuleFunction<I, F> = (value: I, data: F) => RuleFunctionReturn | Promise<RuleFunctionReturn>
+type Rule<I, F> = RuleFunction<I, F> | RegExp
+type RuleObject<I, F> = Rule<I, F> | { rule: Rule<I, F>; message: string }
+type RuleSet<I, F> = RuleObject<I, F> | RuleObject<I, F>[]
 
-function isSimpleRule<I>(obj: RuleObject<I>): obj is Rule<I> {
+function isSimpleRule<I, F>(obj: RuleObject<I, F>): obj is Rule<I, F> {
   return obj instanceof RegExp || typeof obj === 'function'
 }
 
-export type useFormExtractor = (from: any) => any
+export type useFormExtractor<T = any> = (from: any) => T
+export const NoExtractor: useFormExtractor = (v: unknown) => v
 export const HTMLInputExtractor: useFormExtractor = (e: React.FormEvent<HTMLInputElement>) => e.currentTarget.value
 export const HTMLCheckboxExtractor: useFormExtractor = (e: React.FormEvent<HTMLInputElement>) => e.currentTarget.checked
 
 export type FormOptions<R> = {
   rules: R
-  // fields: FieldOptions
 }
 
-// Form = Type of form
+// F = Type of form
 // R = Rules, derived from F
 // E = Errors, derived from F
-export const useForm = <Form extends object, R extends { [K in keyof Form]?: RuleSet<Form[K]> }, E extends { [key in keyof R]?: RuleFunctionReturn }>(init: Form, options?: FormOptions<R>) => {
+export const useForm = <F extends object, R extends { [K in keyof F]?: RuleSet<F[K], F> }, E extends { [key in keyof R]?: RuleFunctionReturn }>(init: F, options?: FormOptions<R>) => {
   const validators: R = options?.rules ?? ({} as R)
 
-  const [form, setForm] = useState<Form>(init)
+  const [form, setForm] = useState<F>(init)
   const [errors, setErrors] = useState<E>({} as E)
-  const [isValid, setIsValid] = useState<boolean>(true)
-
-  useEffect(() => {
-    setIsValid(!Object.values(errors).reduce((acc, cur) => acc || cur !== undefined, false))
+  const isValid = useMemo(() => {
+    return !Object.values(errors).reduce((acc, cur) => acc || cur !== undefined, false)
   }, [errors])
 
-  const setField = <A extends keyof Form>(key: A, value: Form[A]) => {
+  const setField = <A extends keyof F>(key: A, value: F[A]) => {
     setForm({
       ...form,
       [key]: value,
     })
   }
 
-  async function applyRule<I>(value: any, rule: Rule<I>): Promise<RuleFunctionReturn> {
-    if (typeof rule === 'function') return await rule(value)
+  async function applyRule<I>(value: any, rule: Rule<I, F>): Promise<RuleFunctionReturn> {
+    if (typeof rule === 'function') return await rule(value, form)
     if (rule instanceof RegExp) return rule.test(value)
     throw new Error(`Unsupported validator: ${rule}`)
   }
 
-  async function validate<K extends keyof Form>(key: K, value: Form[K]) {
-    const set: RuleSet<Form[K]> | undefined = validators[key] as any
+  async function validate<K extends keyof F>(key: K, value: F[K]) {
+    const set: RuleSet<F[K], F> | undefined = validators[key] as any
     if (!set) return
 
     const rules = Array.isArray(set) ? set : [set]
@@ -74,18 +76,19 @@ export const useForm = <Form extends object, R extends { [K in keyof Form]?: Rul
     })
   }
 
-  function update<A extends keyof Form, RAW = any>(key: A, extractor?: (e: RAW) => Form[A]) {
-    return (value: RAW) => {
-      const extracted = extractor ? extractor(value) : HTMLInputExtractor(value)
+  // Internal use
+  function update<A extends keyof F>(key: A, extractor?: useFormExtractor<F[A]> | null) {
+    return (value: any) => {
+      const extracted = extractor ? extractor(value) : extractor === undefined ? HTMLInputExtractor(value) : value
       setField(key, extracted)
       validate(key, extracted)
     }
   }
 
-  type FieldReturn<K extends keyof Form, G extends string, S extends string> = { [getter in G]: ReturnType<typeof update<K>> } & { [setter in S]: Form[K] }
-  function field<K extends keyof Form>(key: K): FieldReturn<K, 'onChange', 'value'>
-  function field<K extends keyof Form, G extends string, S extends string>(key: K, opts: FieldOptions<G, S>): FieldReturn<K, G, S>
-  function field<K extends keyof Form, G extends string, S extends string>(key: K, opts?: FieldOptions<G, S>): FieldReturn<K, G, S> {
+  type FieldReturn<K extends keyof F, G extends string, S extends string> = { [getter in G]: ReturnType<typeof update<K>> } & { [setter in S]: F[K] }
+  function field<K extends keyof F>(key: K): FieldReturn<K, 'onChange', 'value'>
+  function field<K extends keyof F, G extends string, S extends string>(key: K, opts: FieldOptions<G, S, F[K]>): FieldReturn<K, G, S>
+  function field<K extends keyof F, G extends string, S extends string>(key: K, opts?: FieldOptions<G, S, F[K]>): FieldReturn<K, G, S> {
     return {
       [opts?.getter || 'onChange']: update<K>(key, opts?.extractor),
       [opts?.setter || 'value']: form[key],
