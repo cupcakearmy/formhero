@@ -6,7 +6,6 @@ inputs:
 runs:
   using: "composite" # This is the magic
   steps:
-    - uses: actions/checkout@v3
     - uses: pnpm/action-setup@v2
       with:
         version: 7
