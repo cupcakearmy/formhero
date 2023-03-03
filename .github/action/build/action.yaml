@@ -1,0 +1,22 @@
+name: "Build"
+description: "Build the project."
+
+inputs:
+
+runs:
+  using: "composite" # This is the magic
+  steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 7
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: "pnpm"
+        registry-url: https://registry.npmjs.org/
+
+    - run: pnpm install --frozen-lockfile
+      shell: bash
+    - run: pnpm run build
+      shell: bash
