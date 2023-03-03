@@ -1,9 +1,9 @@
 ![Logo](https://raw.githubusercontent.com/cupcakearmy/formhero/master/.github/Logo.jpg)
 
-![dependencies](https://badgen.net/david/dep/cupcakearmy/formhero)
-![downloads badge](https://badgen.net/npm/dt/formhero)
-![types badge](https://badgen.net/npm/types/formhero)
 ![version badge](https://badgen.net/npm/v/formhero)
+![types badge](https://badgen.net/npm/types/formhero)
+![downloads badge](https://badgen.net/npm/dt/formhero)
+![dependencies](https://badgen.net//bundlephobia/dependency-count/formhero)
 ![minzip size badge](https://badgen.net/bundlephobia/minzip/formhero)
 
 **Fully customisable react form utility.**
@@ -22,7 +22,7 @@
 npm i formhero
 ```
 
-*Note:* Requires at least typescript version `3.5`, otherwise the error object will not have the right inherited types.
+_Note:_ Requires at least typescript version `3.5`, otherwise the error object will not have the right inherited types.
 
 ### 👁 Demos
 
@@ -99,7 +99,7 @@ const Form = () => {
       password: '',
     },
     {
-      username: value => value.length > 3,
+      username: (value) => value.length > 3,
       email: {
         validator: /@/,
         message: 'Must contain an @',
@@ -146,7 +146,7 @@ const Form = () => {
 
   return (
     <form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault()
         console.log(form)
       }}
@@ -159,7 +159,7 @@ const Form = () => {
           {...field('awesome', {
             setter: 'checked',
             getter: 'onChange',
-            extractor: e => e.target.checked,
+            extractor: (e) => e.target.checked,
           })}
         />
         Is it awesome?
@@ -176,28 +176,28 @@ const Form = () => {
 Sometimes you don't know all the fields upfront. You can simply define a generic type and assign it to the initial object. Of course type assistance is limited in this case as formhero cannot be sure what keys are valid.
 
 ```typescript
-import React from "react";
-import ReactDOM from "react-dom";
-import { useForm } from "formhero";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { useForm } from 'formhero'
 
-type MyForm = { [field: string]: string | number };
+type MyForm = { [field: string]: string | number }
 
 const init: MyForm = {
-  username: "unicorn",
-  password: ""
-};
+  username: 'unicorn',
+  password: '',
+}
 
 const Form: React.FC = () => {
-  const { field, form, errors } = useForm(init);
+  const { field, form, errors } = useForm(init)
 
   return (
     <form>
-      <input {...field("username")} placeholder="Username" />
-      <input {...field("someother")} placeholder="Something else" />
-      <input {...field("password")} placeholder="Password" type="password" />
+      <input {...field('username')} placeholder="Username" />
+      <input {...field('someother')} placeholder="Something else" />
+      <input {...field('password')} placeholder="Password" type="password" />
     </form>
-  );
-};
+  )
+}
 ```
 
 ## 📖 Documentation
@@ -267,9 +267,9 @@ const validators = {
       message: 'My custom error message',
     },
     /[\d]/,
-    async value => value.length > 0,
+    async (value) => value.length > 0,
     {
-      validator: value => true,
+      validator: (value) => true,
       message: 'Some other error',
     },
   ],
@@ -282,8 +282,8 @@ const validators = {
 const validators = {
   username: async (s: string) => {
     const taken = await API.isUsernameTaken(s)
-    return taken ? 'Username is taken': true
-  }
+    return taken ? 'Username is taken' : true
+  },
 }
 ```
 
@@ -307,7 +307,7 @@ const validators = {}
 const options = {
   setter: 'value', // This is not stricly necessarry as 'value' would already be the default.
   getter: 'onChangeText',
-  extractor: text => text.toLowerCase(),
+  extractor: (text) => text.toLowerCase(),
 }
 
 export default () => {
@@ -339,7 +339,7 @@ export default () => {
         {...field('username', {
           setter: 'value', // This is not stricly necessarry as 'value' would already be the default.
           getter: 'onChangeText',
-          extractor: text => text.toLowerCase(),
+          extractor: (text) => text.toLowerCase(),
         })}
       />
       <Text>{form.username}</Text>
