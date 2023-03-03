@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/cupcakearmy/formhero/compare/v1.0.1...v1.0.2) (2023-03-03)
+
+
+### Bug Fixes
+
+* tag format ([4821a06](https://github.com/cupcakearmy/formhero/commit/4821a061579abd973e0c0a27b51be726b37dfdba))
+
 ## [1.0.1](https://github.com/cupcakearmy/formhero/compare/v1.0.0...v1.0.1) (2023-03-03)
 
 
