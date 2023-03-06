@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "clean": "rm -rf ./dist",
-    "prepublishOnly": "run-s clean build test",
+    "prepublishOnly": "run-s clean compile test",
     "build": "run-s compile demo",
     "compile": "tsc",
     "compile:watch": "tsc -w",
